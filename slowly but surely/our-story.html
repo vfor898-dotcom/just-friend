@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For You</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500&display=swap');
+
+  :root{
+    --white:#FFFFFF;
+    --cream:#FFF8F8;
+    --pink-pale:#FCE7EC;
+    --pink:#F4B8C8;
+    --pink-deep:#E88AA3;
+    --rose:#C6607A;
+    --text:#5A3745;
+    --gold:#D9A8A0;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{
+    margin:0; height:100%;
+    font-family:'Jost', sans-serif;
+    background:var(--cream);
+    color:var(--text);
+    overflow:hidden;
+  }
+
+  .app{
+    position:relative;
+    height:100vh;
+    width:100vw;
+  }
+
+  .screen{
+    position:absolute;
+    inset:0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:8vh 6vw;
+    text-align:center;
+    opacity:0;
+    pointer-events:none;
+    transform:translateX(40px);
+    transition:opacity 0.7s ease, transform 0.7s ease;
+    background:
+      radial-gradient(circle at 20% 15%, var(--pink-pale) 0%, transparent 45%),
+      radial-gradient(circle at 85% 85%, var(--pink-pale) 0%, transparent 45%),
+      var(--cream);
+  }
+  .screen.active{
+    opacity:1;
+    pointer-events:auto;
+    transform:translateX(0);
+  }
+
+  /* floating hearts ambience */
+  .heart-float{
+    position:absolute;
+    bottom:-10%;
+    font-size:1rem;
+    color:var(--pink);
+    opacity:0.6;
+    animation:floatUp linear infinite;
+    pointer-events:none;
+  }
+  @keyframes floatUp{
+    0%{ transform:translateY(0) rotate(0deg); opacity:0;}
+    10%{ opacity:0.7;}
+    90%{ opacity:0.5;}
+    100%{ transform:translateY(-115vh) rotate(20deg); opacity:0;}
+  }
+
+  /* ---------- SCREEN 1: INTRO ---------- */
+  .eyebrow{
+    letter-spacing:0.25em;
+    text-transform:uppercase;
+    font-size:0.75rem;
+    color:var(--pink-deep);
+    margin-bottom:18px;
+  }
+  .title{
+    font-family:'Cormorant Garamond', serif;
+    font-size:3rem;
+    font-weight:500;
+    line-height:1.15;
+    color:var(--rose);
+    margin:0 0 14px;
+  }
+  .title em{ font-style:italic; color:var(--pink-deep); }
+  .intro-sub{
+    font-size:1rem;
+    max-width:300px;
+    line-height:1.6;
+    color:var(--text);
+    opacity:0.85;
+    margin-bottom:40px;
+  }
+
+  .heart-btn{
+    width:64px; height:64px;
+    cursor:pointer;
+    animation:pulse 1.8s infinite ease-in-out;
+  }
+  @keyframes pulse{
+    0%,100%{ transform:scale(1); }
+    50%{ transform:scale(1.1); }
+  }
+  .tap-label{
+    margin-top:14px;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--pink-deep);
+    opacity:0.8;
+  }
+
+  /* ---------- SCREEN 2: MEMORIES ---------- */
+  .mem-title{
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
+    font-size:2rem;
+    color:var(--rose);
+    margin:0 0 24px;
+  }
+  .mem-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+    width:100%;
+    max-width:340px;
+    margin-bottom:32px;
+  }
+  .mem-frame{
+    position:relative;
+    aspect-ratio:1/1;
+    background:var(--white);
+    padding:8px;
+    border-radius:4px;
+    box-shadow:0 10px 25px -8px rgba(198,96,122,0.35);
+    transform:rotate(var(--tilt));
+    transition:transform 0.3s ease;
+  }
+  .mem-frame:nth-child(1){ --tilt:-3deg; }
+  .mem-frame:nth-child(2){ --tilt:2deg; }
+  .mem-frame:nth-child(3){ --tilt:2deg; }
+  .mem-frame:nth-child(4){ --tilt:-2deg; }
+  .mem-frame:hover{ transform:rotate(0deg) scale(1.04); }
+
+  .mem-frame img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    border-radius:2px;
+    display:block;
+    background:var(--pink-pale);
+  }
+  .mem-frame .placeholder-label{
+    position:absolute;
+    inset:8px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:0.7rem;
+    color:var(--pink-deep);
+    background:var(--pink-pale);
+    border-radius:2px;
+    letter-spacing:0.05em;
+  }
+
+  /* ---------- SCREEN 3: RING ---------- */
+  .ring-svg{ width:150px; height:150px; }
+  .ring-svg .gem{
+    animation: sparkleGem 2.2s infinite ease-in-out;
+    transform-origin:center;
+  }
+  @keyframes sparkleGem{
+    0%,100%{ filter:drop-shadow(0 0 3px var(--gold)); }
+    50%{ filter:drop-shadow(0 0 16px #fff); }
+  }
+  .ring-message{
+    margin-top:20px;
+    font-family:'Cormorant Garamond', serif;
+    font-size:1.9rem;
+    font-style:italic;
+    color:var(--rose);
+    line-height:1.4;
+    max-width:320px;
+  }
+  .ring-sub{
+    display:block;
+    margin-top:8px;
+    font-family:'Jost', sans-serif;
+    font-style:normal;
+    font-size:0.8rem;
+    letter-spacing:0.14em;
+    color:var(--pink-deep);
+    text-transform:uppercase;
+  }
+
+  /* nav dots */
+  .dots{
+    position:absolute;
+    bottom:5vh;
+    left:50%;
+    transform:translateX(-50%);
+    display:flex;
+    gap:8px;
+    z-index:10;
+  }
+  .dot{
+    width:7px; height:7px;
+    border-radius:50%;
+    background:var(--pink);
+    opacity:0.4;
+    transition:opacity 0.3s ease, transform 0.3s ease;
+  }
+  .dot.on{ opacity:1; transform:scale(1.3); background:var(--rose); }
+
+  .next-btn{
+    margin-top:8px;
+    padding:12px 30px;
+    border-radius:30px;
+    border:1px solid var(--pink-deep);
+    background:transparent;
+    color:var(--rose);
+    font-family:'Jost', sans-serif;
+    font-size:0.8rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    cursor:pointer;
+    transition:background 0.3s ease, color 0.3s ease;
+  }
+  .next-btn:hover{
+    background:var(--pink-deep);
+    color:var(--white);
+  }
+</style>
+</head>
+<body>
+
+<div class="app" id="app">
+
+  <!-- SCREEN 1 -->
+  <div class="screen active" data-index="0">
+    <div class="eyebrow">a little something</div>
+    <h1 class="title">For my <em>favorite<br>person</em></h1>
+    <p class="intro-sub">A few memories, and something I've been wanting to ask you.</p>
+    <svg class="heart-btn" viewBox="0 0 24 24" fill="var(--pink-deep)" onclick="goTo(1)">
+      <path d="M12 21s-7.5-4.6-10-9.2C0.3 8.6 1.8 5 5.4 5c2 0 3.4 1.1 4.1 2.4C10.2 6.1 11.6 5 13.6 5c3.6 0 5.1 3.6 3.4 6.8C19.5 16.4 12 21 12 21z"/>
+    </svg>
+    <div class="tap-label">tap the heart</div>
+  </div>
+
+  <!-- SCREEN 2 -->
+  <div class="screen" data-index="1">
+    <div class="eyebrow">our story so far</div>
+    <h2 class="mem-title">a few of my favorites</h2>
+    <div class="mem-grid">
+      <div class="mem-frame">
+        <!-- Replace src below with your photo, e.g. src="photo1.jpg" -->
+        <img src="WhatsApp Image 2026-07-01 at 9.33.17 PM.jpeg" alt="Memory 1" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="placeholder-label" style="display:none;">photo 1</div>
+      </div>
+      <div class="mem-frame">
+        <img src="WhatsApp Image 2026-06-26 at 3.43.34 PM.jpeg" alt="Memory 2" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="placeholder-label" style="display:none;">photo 2</div>
+      </div>
+      <div class="mem-frame">
+        <img src="WhatsApp Image 2026-07-01 at 9.33.17 PM (1).jpeg" alt="Memory 3" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="placeholder-label" style="display:none;">photo 3</div>
+      </div>
+      <div class="mem-frame">
+        <img src="WhatsApp Image 2026-07-01 at 9.33.16 PM (1).jpeg" alt="Memory 4" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="placeholder-label" style="display:none;">photo 4</div>
+      </div>
+    </div>
+    <button class="next-btn" onclick="goTo(2)">continue</button>
+  </div>
+
+  <!-- SCREEN 3 -->
+  <div class="screen" data-index="2">
+    <div class="eyebrow">and now...</div>
+    <svg class="ring-svg" viewBox="0 0 100 100" fill="none">
+      <g class="gem">
+        <polygon points="50,10 62,24 50,52 38,24" fill="#fff" stroke="var(--pink-deep)" stroke-width="1"/>
+        <polygon points="38,24 50,10 50,24" fill="#fde6ec" opacity="0.9"/>
+        <polygon points="62,24 50,10 50,24" fill="#ffffff" opacity="0.95"/>
+        <polygon points="38,24 50,52 50,24" fill="#f6c9d6" opacity="0.85"/>
+        <polygon points="62,24 50,52 50,24" fill="#ffe9ef" opacity="0.9"/>
+      </g>
+      <path d="M50 60 C 30 62, 24 78, 30 90 C 36 100, 64 100, 70 90 C 76 78, 70 62, 50 60"
+            fill="none" stroke="var(--gold)" stroke-width="5" stroke-linecap="round"/>
+      <path d="M50 60 C 30 62, 24 78, 30 90 C 36 100, 64 100, 70 90 C 76 78, 70 62, 50 60"
+            fill="none" stroke="var(--pink-deep)" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+    </svg>
+    <div class="ring-message">
+      Will you be mine, forever?
+      <span class="ring-sub">yes or yes</span>
+    </div>
+  </div>
+
+  <div class="dots">
+    <div class="dot on" data-dot="0"></div>
+    <div class="dot" data-dot="1"></div>
+    <div class="dot" data-dot="2"></div>
+  </div>
+
+</div>
+
+<script>
+  const app = document.getElementById('app');
+
+  // floating hearts ambience
+  for(let i=0;i<14;i++){
+    const h = document.createElement('div');
+    h.className = 'heart-float';
+    h.textContent = '♥';
+    h.style.left = Math.random()*100+'%';
+    h.style.fontSize = (0.7+Math.random()*1.1)+'rem';
+    h.style.animationDuration = (6+Math.random()*6)+'s';
+    h.style.animationDelay = (Math.random()*6)+'s';
+    app.appendChild(h);
+  }
+
+  function goTo(index){
+    document.querySelectorAll('.screen').forEach(s=>{
+      s.classList.toggle('active', Number(s.dataset.index) === index);
+    });
+    document.querySelectorAll('.dot').forEach(d=>{
+      d.classList.toggle('on', Number(d.dataset.dot) === index);
+    });
+  }
+</script>
+
+</body>
+</html>
